@@ -1,0 +1,24 @@
+[Unit]
+Description=Pulsante aggiornamento Cora da GitHub
+After=cora-updater.service network.target
+Requires=cora-updater.service
+
+[Service]
+Type=simple
+# Usare lo stesso utente del servizio cora-updater, con accesso al bridge.token.
+User=ale
+WorkingDirectory=/srv/pulsante-aggiorna
+# Sostituire SERVER.TAILNET.ts.net con l'hostname reale prima di installare.
+ExecStart=/usr/bin/python3 /srv/pulsante-aggiorna/app.py --state-dir /srv/pulsante-aggiorna-state --origin https://SERVER.TAILNET.ts.net:8443
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/srv/pulsante-aggiorna-state
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target
